@@ -15,7 +15,7 @@ var app = express();
 app.use(bodyParser.json());
 // It will listen our port 
 
-app.post('/employee', (req, res) => {
+app.post('/user', (req, res) => {
     var usr = new user({
         userName: req.body.userName,
         email: req.body.email
@@ -28,6 +28,8 @@ app.post('/employee', (req, res) => {
 app.listen(3000, () => {
     console.log('Server is running');
 })
+
+module.exports = { app };
 
 // var newEmployee = new employee(
 //     {
