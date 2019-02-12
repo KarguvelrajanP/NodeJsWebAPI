@@ -2,7 +2,7 @@
 // Library imports ///
 const express = require('express');
 const bodyParser = require('body-parser');
-
+const { ObjectID } = require('mongodb');
 // Local imports ///
 // Initiallizing the mongoose connection from mongoose file
 var mongoose = require('./db/mongoose.js');
@@ -34,6 +34,24 @@ app.get('/users', (req, res) => {
         res.status(400).send(e);
     })
 });
+
+// Getting the data by ID 
+app.get('/user/:id', (req, res) => {
+    var id = req.params.id;
+    // Checking id is valid or not using mongodb ObjectID
+    if (!ObjectID.isValid(id)) {
+        res.status(404).send();
+    }
+
+    employee.findById(id).then((emp) => {
+        if (!emp) {
+            return res.status(404).send();
+        }
+        res.send(emp);
+    }).catch((e) => {
+        res.status(400).send();
+    })
+})
 
 app.listen(3000, () => {
     console.log('Server is running');
