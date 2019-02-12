@@ -15,6 +15,7 @@ var app = express();
 app.use(bodyParser.json());
 // It will listen our port 
 
+// Inserting data into user collection using POST method POST /user
 app.post('/user', (req, res) => {
     var usr = new user({
         userName: req.body.userName,
@@ -25,33 +26,18 @@ app.post('/user', (req, res) => {
     })
 });
 
+// Getting all reocords from user collection using get method  Get /users
+app.get('/users', (req, res) => {
+    user.find({}).then((users) => {
+        res.send({ users, status: 200 })
+    }, (e) => {
+        res.status(400).send(e);
+    })
+});
+
 app.listen(3000, () => {
     console.log('Server is running');
 })
 
 module.exports = { app };
 
-// var newEmployee = new employee(
-//     {
-//         name: ' Testing the app with default  '
-//         //   name: 'Rajan', age: 23, isAdmin: true
-//     }
-// )
-
-// newEmployee.save().then((res) => {
-//     console.log(res);
-// }, (e) => { console.log(`Unable to save the data into database : ${e}`) }
-// );
-
-
-
-// var newUser = new user(
-//     {
-//         userName: 'Rajan',
-//         email: 'Karguvelrajan.P@gmail.com'
-//     }
-// );
-
-// newUser.save().then((res) => {
-//     console.log(res);
-// }, (e) => { console.log(`Unable to insert the records : ${e}`) })

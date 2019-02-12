@@ -6,19 +6,33 @@ const request = require('supertest');
 const { app } = require('../server');
 const { user } = require('../models/user');
 
+// Creating object collecton for user 
+
+const users = [
+    { userName: 'user1', email: 'user1@gmail.com' },
+    { userName: 'user2', email: 'user2@gmail.com' }
+]
+
+
 // Removing the data from database before testing
 beforeEach((done) => {
-    user.remove({}).then(() => done());
+    user.remove({}).then(() => {
+        return user.insertMany(users);
+    }).then(() => done()).catch((e) => {
+        done(e);
+    });
 })
 
+
+// Testing script for insert new record into employee collection
 describe('POST /employee', () => {
 
     /// Postive flow 
     it('Should be create new employee', (done) => {
         // Input for employee tables
         var { userName, email } = {
-            userName: 'Karguvelrajan',
-            email: 'Karguvelrajan.P@gmail.com'
+            userName: 'user3',
+            email: 'user3@gmail.com'
         }
         // creating post request to insert record in employee collection
         request(app)
@@ -32,7 +46,7 @@ describe('POST /employee', () => {
                 if (err) {
                     return done(err);
                 }
-                user.find().then((users) => {
+                user.find({ userName, email }).then((users) => {
                     expect(users.length).toBe(1);
                     expect(users[0].userName).toBe(userName);
                     done();
@@ -51,9 +65,24 @@ describe('POST /employee', () => {
                     return done(err);
                 }
                 user.find().then((users) => {
-                    expect(users.length).toBe(0);
+                    expect(users.length).toBe(2);
                     done();
                 }).catch((e) => { done(e) });
             })
     });
 })
+
+
+describe('Get / employee', () => {
+    // Postive flow to get the all records from employee collections
+    it('Should be return all records', (done) => {
+        request(app)
+            .get('/users')
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.users.length).toBe(2);
+            })
+            .end(done);
+    })
+
+});
