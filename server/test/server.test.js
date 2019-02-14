@@ -1,7 +1,7 @@
 // Calling the library files
 const expect = require('expect');
 const request = require('supertest');
-
+const { ObjectID } = require('mongodb');
 // Calling the local file system
 const { app } = require('../server');
 const { user } = require('../models/user');
@@ -9,8 +9,8 @@ const { user } = require('../models/user');
 // Creating object collecton for user 
 
 const users = [
-    { userName: 'user1', email: 'user1@gmail.com' },
-    { userName: 'user2', email: 'user2@gmail.com' }
+    { _id: new ObjectID(), userName: 'user1', email: 'user1@gmail.com' },
+    { _id: new ObjectID(), userName: 'user2', email: 'user2@gmail.com' }
 ]
 
 
@@ -24,9 +24,8 @@ beforeEach((done) => {
 })
 
 
-// Testing script for insert new record into employee collection
-describe('POST /employee', () => {
-
+// Testing script for insert new record into user collections.
+describe('POST /user', () => {
     /// Postive flow 
     it('Should be create new employee', (done) => {
         // Input for employee tables
@@ -53,7 +52,6 @@ describe('POST /employee', () => {
                 }).catch((e) => { done(e) });
             })
     })
-
     // Nagative flow 
     it('should not create record in employee collection with invaild boday data', (done) => {
         request(app)
@@ -71,8 +69,7 @@ describe('POST /employee', () => {
             })
     });
 })
-
-
+// Testing script for get the all user list from user collections.
 describe('Get / employee', () => {
     // Postive flow to get the all records from employee collections
     it('Should be return all records', (done) => {
@@ -86,3 +83,36 @@ describe('Get / employee', () => {
     })
 
 });
+// Testing script for get the user with id method
+describe('Get /user/:id', () => {
+    it('Should be return data for corresponding id', (done) => {
+        request(app)
+            .get(`/user/${users[0]._id.toHexString()}`)
+            .expect(200)
+            .expect((res) => {                
+                expect(res.body.userName).toBe(users[0].userName)
+            })
+            .end(done);
+    })
+
+    it('Should be return 404 for record not found', (done) => {
+        request(app)
+            .get(`/user/${new ObjectID()}`)
+            .expect(404)
+            // .expect((res) => {                
+            //     expect(res.body.user.userName).toBe(users[0].userName)
+            // })
+            .end(done);
+    })
+
+    it('Should be return 404 for non object ids', (done) => {
+        request(app)
+            .get(`/user/123`)
+            .expect(404)
+            // .expect((res) => {
+            //     console.log(res.body.user.userName)
+            //     expect(res.body.user.userName).toBe(users[0].userName)
+            // })
+            .end(done);
+    })
+})

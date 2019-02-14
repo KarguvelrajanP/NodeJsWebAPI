@@ -42,8 +42,7 @@ app.get('/user/:id', (req, res) => {
     if (!ObjectID.isValid(id)) {
         res.status(404).send();
     }
-
-    employee.findById(id).then((emp) => {
+    user.findById(id).then((emp) => {       
         if (!emp) {
             return res.status(404).send();
         }
