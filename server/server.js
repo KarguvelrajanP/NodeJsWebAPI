@@ -13,7 +13,10 @@ var { user } = require('./models/user');
 // It will store our express application 
 var app = express();
 app.use(bodyParser.json());
-// It will listen our port 
+
+
+// Be
+const port = process.env.PORT || 3000;
 
 // Inserting data into user collection using POST method POST /user
 app.post('/user', (req, res) => {
@@ -42,7 +45,7 @@ app.get('/user/:id', (req, res) => {
     if (!ObjectID.isValid(id)) {
         res.status(404).send();
     }
-    user.findById(id).then((emp) => {       
+    user.findById(id).then((emp) => {
         if (!emp) {
             return res.status(404).send();
         }
@@ -52,8 +55,8 @@ app.get('/user/:id', (req, res) => {
     })
 })
 
-app.listen(3000, () => {
-    console.log('Server is running');
+app.listen(port, () => {
+    console.log(`Server run in ${port}`);
 })
 
 module.exports = { app };
