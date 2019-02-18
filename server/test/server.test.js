@@ -1,3 +1,4 @@
+//process.env.MONGODB_URI = 'mongodb://localhost:27017/APIDbTest'
 // Calling the library files
 const expect = require('expect');
 const request = require('supertest');
@@ -5,15 +6,11 @@ const { ObjectID } = require('mongodb');
 // Calling the local file system
 const { app } = require('../server');
 const { user } = require('../models/user');
-
 // Creating object collecton for user 
-
 const users = [
     { _id: new ObjectID(), userName: 'user1', email: 'user1@gmail.com' },
     { _id: new ObjectID(), userName: 'user2', email: 'user2@gmail.com' }
 ]
-
-
 // Removing the data from database before testing
 beforeEach((done) => {
     user.remove({}).then(() => {
@@ -22,8 +19,6 @@ beforeEach((done) => {
         done(e);
     });
 })
-
-
 // Testing script for insert new record into user collections.
 describe('POST /user', () => {
     /// Postive flow 
@@ -154,7 +149,6 @@ describe('Delete /user/:id', () => {
     });
 
 });
-
 describe('Patch /user/:id', () => {
     it('Should update the data', (done) => {
         // Getting the ID

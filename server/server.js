@@ -1,3 +1,5 @@
+// Loading the Config settings 
+require('./config/config');
 // Library imports ///
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -13,7 +15,7 @@ var { user } = require('./models/user');
 var app = express();
 app.use(bodyParser.json());
 // Be
-const port = process.env.PORT || 3000;
+
 // Inserting data into user collection using POST method POST /user
 app.post('/user', (req, res) => {
     var usr = new user({
@@ -84,6 +86,6 @@ app.patch('/user/:id', (req, res) => {
 })
 
 app.listen(port, () => {
-    console.log(`Server run in ${port}`);
+    console.log(`Server run in ${process.env.PORT}`);
 })
 module.exports = { app };
