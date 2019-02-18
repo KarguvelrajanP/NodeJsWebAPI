@@ -85,7 +85,7 @@ app.patch('/user/:id', (req, res) => {
     })
 })
 
-app.listen(port, () => {
+app.listen(process.env.PORT, () => {
     console.log(`Server run in ${process.env.PORT}`);
 })
 module.exports = { app };
