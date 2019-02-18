@@ -89,7 +89,7 @@ describe('Get /user/:id', () => {
         request(app)
             .get(`/user/${users[0]._id.toHexString()}`)
             .expect(200)
-            .expect((res) => {                
+            .expect((res) => {
                 expect(res.body.userName).toBe(users[0].userName)
             })
             .end(done);
@@ -115,4 +115,42 @@ describe('Get /user/:id', () => {
             // })
             .end(done);
     })
-})
+});
+// Testing script to delete the user with id
+describe('Delete /user/:id', () => {
+    it('Should remove user', (done) => {
+        var hexId = users[1]._id.toHexString();
+        request(app)
+            .delete(`/user/${hexId}`)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body._id).toBe(hexId);
+            })
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+                user.findById(hexId).then((doc) => {
+                    expect(doc).toBe(null);
+                    done();
+                }).catch((e) => done(e));
+            })
+    });
+
+    it('Should return 404 if user not found', (done) => {
+        var hexId = new ObjectID().toHexString();
+        request(app)
+            .delete(`/user/${hexId}`)
+            .expect(404)
+            .end(done)
+    });
+
+    it('Should return 404 if user not found', (done) => {
+        var hexId = new ObjectID().toHexString();
+        request(app)
+            .delete(`/user/${hexId}`)
+            .expect(404)
+            .end(done)
+    });
+
+});
