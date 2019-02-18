@@ -154,3 +154,29 @@ describe('Delete /user/:id', () => {
     });
 
 });
+
+describe('Patch /user/:id', () => {
+    it('Should update the data', (done) => {
+        // Getting the ID
+        var haxId = users[1]._id.toHexString();
+        //    var body = { userName: 'user3', email: 'user3@gmail.com' }
+        request(app)
+            .patch(`/user/${haxId}`)
+            .send({ userName: 'user3', email: 'user3@gmail.com' })
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.userName).toBe('user3');
+            })
+            .end(done)
+    })
+
+    it('Should return status 404 if doc not found', (done) => {
+        // Getting the ID
+        var haxId = new ObjectID().toHexString();
+        request(app)
+            .patch(`/user/${haxId}`)
+            .send({ userName: 'user3', email: 'user3@gmail.com' })
+            .expect(404)
+            .end(done)
+    })
+});
